@@ -1,10 +1,11 @@
-author: mongoose-os
-description: An empty app that does nothing
+author: Christopher Biggs <unixbigot@pobox.com>
+description: An AWS IoT device to remind you to take medication
 version: 1.0
 
 # Optional. List of tags for online search.
 tags:
-  - c
+  - aws
+  - js
 
 # List of files / directories with C sources. No slashes at the end of dir names.
 sources:
@@ -16,16 +17,14 @@ filesystem:
 
 # Custom configuration entries, settable via "device configuration"
 config_schema:
-#  - ["my_app", "o", {title: "My app custom settings"}]
-#  - ["my_app.bool_value", "b", false, {title: "Some boolean value"}]
-#  - ["my_app.string_value", "s", "", {title: "Some string value"}]
-#  - ["my_app.int_value", "i", 123, {title: "Some integer value"}]
+  - ["healthpack", "o", {title: "Healthpack settings"}]
+  - ["healthpack.notify", "s", "", {title: "Email or phone number for notifications"}]
+  - ["healthpack.interval", "i", 24, {title: "Number of hours expected between doses"}]
 
 # List of libraries used by this app, in order of initialisation
 libs:
   - origin: https://github.com/mongoose-os-libs/rpc-service-config
   - origin: https://github.com/mongoose-os-libs/rpc-service-fs
-  - origin: https://github.com/mongoose-os-libs/rpc-uart
 
 # Used by the mos tool to catch mos binaries incompatible with this file format
 skeleton_version: 2017-05-18
