@@ -1,9 +1,14 @@
-# A blank Mongoose OS app
+# Healthpack - a medication tracker and reminder
 
 ## Overview
 
-This is an empty app, serves as a skeleton for building Mongoose OS
-apps from scratch.
+This application inhabits a smart medicine cabinet which you program
+with your dose requirements.   It remembers when you last took a dose,
+and reminds you when time for next dose is approaching
+
+For those, like me, who sometimes have hectic mornings where they're not sure if they took
+their dose today or not, there's a visual reminder whether or not a
+dose was taken recently.
 
 ## How to install this app
 
