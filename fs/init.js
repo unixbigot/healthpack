@@ -74,6 +74,32 @@ let state = {
   notify: "you@example.com"	// Email or phone number for notifications
 };
 
+let topic_base = 'healthpack/' + Cfg.get('device.id');
+
+RPC.addHandler('healthpack.SetState', function(args) {
+  for (let key in args) {
+    state[key] = args[key];
+  }
+  return state;
+});
+
+RPC.addHandler('healthpack.GetState', function(args) {
+  return state;
+});
+
+RPC.addHandler('healthpack.GetLastDose', function(args) {
+  return state.last_dose;
+});
+
+RPC.addHandler('healthpack.GetDoseInterval', function(args) {
+  return state.dose_interval;
+});
+
+RPC.addHandler('healthpack.GetDoseWarn', function(args) {
+  return state.dose_warn;
+});
+
+
 //
 // Get the current time as javascript microseconds
 //
@@ -203,12 +229,16 @@ function send_dose() {
   //
   // Construct and transmit an MQTT message consisting of topic and payload
   //
-  let topic = Cfg.get('device.id') + '/event/dose'; 
+  let topic = topic_base + '/event/dose'; 
   let uptime = Sys.uptime();
   let payload = JSON.stringify({
     uptime: uptime,
   });
+  print("    PUB to",topic);
   let ok = MQTT.pub(topic, payload, 1);
+  if (!ok) {
+    print("    WARN: MQTT publish failed")
+  }
 
   //
   // Update the shadow document and transmit a shadow update
@@ -234,11 +264,15 @@ function send_close() {
   //
   // Construct and transmit an MQTT message (use uptime as the payload)
   //
-  let topic = Cfg.get('device.id') + '/event/close';
+  let topic = topic_base + '/event/close';
   let payload = JSON.stringify({
     uptime: Sys.uptime(),
   });
+  print("    PUB to",topic);
   let ok = MQTT.pub(topic, payload, 1);
+  if (!ok) {
+    print("    WARN: MQTT publish failed")
+  }
 
   //
   // Update the shadow document with changed state
@@ -258,11 +292,14 @@ function send_startup() {
   //
   // Construct and transmit an MQTT message (use uptime as the payload)
   //
-  let topic = Cfg.get('device.id') + '/event/startup';
+  let topic = topic_base + '/event/startup';
   let payload = JSON.stringify({
     uptime: Sys.uptime(),
   });
   let ok = MQTT.pub(topic, payload, 1);
+  if (!ok) {
+    print("    WARN: MQTT publish failed")
+  }
 
   //
   // Update the shadow document
@@ -280,13 +317,16 @@ function send_reminder(time_to_next_dose) {
   //
   // Construct and transmit an MQTT message (use time to next dose as the payload)
   //
-  let topic = Cfg.get('device.id') + '/event/reminder';
+  let topic = topic_base + '/event/reminder';
   let uptime = Sys.uptime();
   let payload = JSON.stringify({
     uptime: uptime,
     time_to_next_dose: time_to_next_dose
   });
   let ok = MQTT.pub(topic, payload, 1);
+  if (!ok) {
+    print("    WARN: MQTT publish failed")
+  }
 
   //
   // If the transmit succeeded, record that we have sent
@@ -312,13 +352,16 @@ function send_alert(time_since_last_dose) {
   //
   // Construct and transmit an MQTT message (use time since last dose as the payload)
   //
-  let topic = Cfg.get('device.id') + '/event/alert';
+  let topic = topic_base + '/event/alert';
   let uptime = Sys.uptime();
   let payload = JSON.stringify({
     uptime: uptime,
     time_since_last_dose: time_since_last_dose
   });
   let ok = MQTT.pub(topic, payload, 1);
+  if (!ok) {
+    print("    WARN: MQTT publish failed")
+  }
 
   //
   // If the transmit succeeded, record that we have sent

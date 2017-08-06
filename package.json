@@ -1,0 +1,20 @@
+{
+  "name": "healthpack",
+  "version": "0.0.1",
+  "description": "Healthpack AWS event handlers",
+  "main": "aws/handler.js",
+  "scripts": {
+    "test": "serverless invoke test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "elm": "^0.18.0",
+    "mocha": "^3.4.2",
+    "serverless-apig-s3": "^1.2.0",
+    "serverless-mocha-plugin": "^1.4.1",
+    "serverless-offline": "^3.15.1"
+  }
+}

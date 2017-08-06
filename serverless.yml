@@ -1,0 +1,56 @@
+
+service: healthpack
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  environment:
+  stage: dev
+  region: ap-southeast-2
+
+functions:
+  ping:
+    handler: aws/handler.ping
+    events:
+      - http:
+        path: ping
+        method: get
+      - iot:
+        sql: "SELECT * FROM 'healthpack/#/event/ping'"
+  dose:
+    handler: aws/handler.dose
+    events:
+      - iot:
+        sql: "SELECT * FROM 'healthpack/#/event/dose'"
+  close:
+    handler: aws/handler.close
+    events:
+      - iot:
+        sql: "SELECT * FROM 'healthpack/#/event/close'"
+  reminder:
+    handler: aws/handler.reminder
+    events:
+      - iot:
+        sql: "SELECT * FROM 'healthpack/#/event/reminder'"
+    environment:
+      - EMAIL: unixbigot@gmail.com
+  alert:
+    handler: aws/handler.alert
+    events:
+      - iot:
+        sql: "SELECT * FROM 'healthpack/#/event/alert'"
+    environment:
+      - EMAIL: unixbigot@gmail.com
+    
+plugins:
+  - serverless-offline
+  - serverless-apig-s3
+
+custom:
+  apigs3:
+    dist: static	 # path within service to find content to upload (default: client/dist)
+    topFiles: true       # create routes for top-level files in dist folder (default: false)
+    # dotFiles: true     # include files beginning with a dot in resources and uploads (default: false)
+    resourceName: static # route path for static assets (default: assets)
+    #resourcePath: /dist  # path prefix for assets in s3 bucket (default: '')
+    
